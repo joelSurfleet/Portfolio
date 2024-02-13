@@ -1,18 +1,6 @@
 # Joel Surfleet's Isentropic Toolbox
 
-def bisection(f,a,b,TOL):
-
-    for all in range(100):
-        if f(a)/f(b) < TOL:
-            break
-        elif abs(f(a)) > abs(f(b)):
-            a = (a + b) / 2
-        else:
-            b = (a + b) / 2
-
-    c = (a + b) / 2
-    
-    return c
+from math import log
 
 class isentropic:
     def __init__(fluid,k):
@@ -37,7 +25,7 @@ class isentropic:
         fluid.rhoratio = x ** (1/(fluid.k-1))
         fluid.Tratio   = x
 
-    def static(fluid,P,rho,T):
+    def getStag(fluid,P,rho,T):
         fluid.Ps   = P
         fluid.rhos = rho
         fluid.Ts   = T
@@ -48,7 +36,7 @@ class isentropic:
 
         fluid.a = (fluid.k * P / rho) ** (1/2)
 
-    def stag(fluid,P0,rho0,T0):
+    def getStatic(fluid,P0,rho0,T0):
         fluid.P0   = P0
         fluid.rho0 = rho0
         fluid.T0   = T0
@@ -77,12 +65,72 @@ class rayleigh:
         flow.T0ratio = (((flow.k + 1) * M) / ((1 + flow.k * M) ** 2)) * (2 + (flow.k - 1) * M)
         flow.P0ratio = ((1 + flow.k) / (1 + flow.k * M)) * (((2 + (flow.k - 1) * M) / (flow.k + 1)) ** (flow.k / (flow.k - 1)))
 
-    def T0(flow,x):
-        
-        
-        
-        return flow.M2
+    def getStar(flow,P,rho,T,P0,T0):
+        flow.Pstar = P / flow.Pratio
+        flow.Tstar = T / flow.Tratio
+        flow.rhostar = rho / flow.rhoratio
+        flow.P0star = P0 / flow.P0ratio
+        flow.T0star = T0 / flow.T0ratio
 
+        flow.P = P
+        flow.rho = rho
+        flow.T = T
+        flow.P0 = P0
+        flow.T0 = T0
+
+    def getReal(flow,Pstar,rhostar,Tstar,P0star,T0star):
+        flow.P = Pstar * flow.Pratio
+        flow.rho = rhostar * flow.rhoratio
+        flow.T = Tstar * flow.Tratio
+        flow.P0 = P0star * flow.P0ratio
+        flow.T0 = T0star * flow.T0ratio
+
+        flow.Pstar = Pstar
+        flow.Tstar = Tstar
+        flow.rhostar = rhostar
+        flow.P0star = P0star
+        flow.T0star = T0star
+
+class fanno:
+    def __init__(flow,k):
+        flow.k = k
+
+    def M(flow,M):
+        M = M ** 2
+        k = flow.k
+        flow.fL4D = (1 - M) / (k * M) + (k + 1) /(2 * k) * log(((k + 1) * M) / (2 + (k - 1)*M))
+
+        flow.Pratio = (1 / M ** (1/2)) * ((k + 1) / (2 + (k - 1) * M)) ** (1/2)
+        flow.rhoratio = (1 / M ** (1/2)) * ((2 + (k - 1) * M) / (k + 1)) ** (1/2)
+        flow.Tratio = (k + 1) / (2 + (k - 1) * M)
+        flow.P0ratio = (1 / M ** (1/2)) * ((2 + (k - 1) * M) / (k + 1)) ** ((k + 1) / (2 * (k-1)))
+
+
+    def getStar(flow,P,rho,T,P0):
+        flow.Pstar = P / flow.Pratio
+        flow.Tstar = T / flow.Tratio
+        flow.rhostar = rho / flow.rhoratio
+        flow.P0star = P0 / flow.P0ratio
+
+        flow.P = P
+        flow.rho = rho
+        flow.T = T
+        flow.P0 = P0
+
+    def getReal(flow,Pstar,rhostar,Tstar,P0star):
+        flow.P = Pstar * flow.Pratio
+        flow.rho = rhostar * flow.rhoratio
+        flow.T = Tstar * flow.Tratio
+        flow.P0 = P0star * flow.P0ratio
+
+        flow.Pstar = Pstar
+        flow.Tstar = Tstar
+        flow.rhostar = rhostar
+        flow.P0star = P0star
+        
+
+def linInterp(x1,y1,y2,z1,z2):
+    return (x1 - y1) / (y2 - y1) * (z2 - z1) + z1
 
 # air = isentropic(1.4)
 # air.M(0.2)
@@ -90,7 +138,7 @@ class rayleigh:
 # print(air.P0,air.T0)
 
 # flow = rayleigh(1.4)
-# flow.Mstar(0.2)
+# flow.M(0.2)
 
 # P02 = 1.028
 
@@ -104,22 +152,23 @@ class rayleigh:
 
 # print(T02ratio)
 
-# Example work from aero 303 HW #2 problem 3
-air = isentropic(1.4)
-air.M(3)
+# # Example work from aero 303 HW #2 problem 3
+# air = isentropic(1.4)
+# air.M(3)
 
-print()
-print("Pressure ratio",air.Pratio)
-print("Density Ratio",air.rhoratio)
-print("Temperature Ratio",air.Tratio)
-print()
+# print()
+# print("Pressure ratio",air.Pratio)
+# print("Density Ratio",air.rhoratio)
+# print("Temperature Ratio",air.Tratio)
+# print()
 
-air.static(101000,1.4077,250)
+# air.static(101000,1.4077,250)
 
-print("Stagnation Pressure",air.P0/1000,"kPa")
-print("Stagnation Density",air.rho0,"kg/m^3")
-print("Stagnation Temperature",air.T0,"K")
-print()
+# print("Stagnation Pressure",air.P0/1000,"kPa")
+# print("Stagnation Density",air.rho0,"kg/m^3")
+# print("Stagnation Temperature",air.T0,"K")
+# print()
 
-print("Speed of Sound:",air.a,"m/s")
-print("Air Speed:",air.a * 3,"m/s")
+# print("Speed of Sound:",air.a,"m/s")
+# print("Air Speed:",air.a * 3,"m/s")
+    
