@@ -6,8 +6,8 @@ class isentropic:
     def __init__(fluid,k):
         fluid.k = k
 
-    def M(fluid,x):
-        fluid.Tratio = 1 / ( 1 + (((fluid.k-1)/2) * (x**2)))
+    def M(fluid,M):
+        fluid.Tratio = 1 / (1 + (((fluid.k - 1) / 2) * (M ** 2)))
         fluid.T(fluid.Tratio)
         
     def P(fluid,x):
@@ -46,11 +46,31 @@ class isentropic:
         fluid.Ts   = T0   * fluid.Tratio
 
 class normalShock:
-    def __init__(fluid,M,k):
+    def __init__(fluid,k):
         fluid.k = k
+
+    def M(fluid,M):
         fluid.rhoratio = ((fluid.k+1) * M ** 2) / (2 + (fluid.k - 1) * M ** 2)
         fluid.Pratio = 1 + (2 * fluid.k) / (fluid.k + 1) * (M ** 2 - 1)
         fluid.Tratio = fluid.Pratio * fluid.rhoratio
+
+    def get1(flow,P2,rho2,T2):
+        flow.P1 = P2 / flow.Pratio
+        flow.T1 = T2 / flow.Tratio
+        flow.rho1 = rho2 / flow.rhoratio
+
+        flow.P2 = P2
+        flow.rho2 = rho2
+        flow.T2 = T2
+
+    def get2(flow,P1,rho1,T1):
+        flow.P2 = P1 * flow.Pratio
+        flow.rho2 = rho1 * flow.rhoratio
+        flow.T2 = T1 * flow.Tratio
+
+        flow.P1 = P1
+        flow.T1 = T1
+        flow.rho1 = rho1
     
 class rayleigh:
     def __init__(flow,k):
@@ -105,7 +125,6 @@ class fanno:
         flow.Tratio = (k + 1) / (2 + (k - 1) * M)
         flow.P0ratio = (1 / M ** (1/2)) * ((2 + (k - 1) * M) / (k + 1)) ** ((k + 1) / (2 * (k-1)))
 
-
     def getStar(flow,P,rho,T,P0):
         flow.Pstar = P / flow.Pratio
         flow.Tstar = T / flow.Tratio
@@ -127,14 +146,16 @@ class fanno:
         flow.Tstar = Tstar
         flow.rhostar = rhostar
         flow.P0star = P0star
-        
 
 def linInterp(x1,y1,y2,z1,z2):
+    # x1: your data point
+    # y1, y2: the values bracketing your data point
+    # z1, z2: the values bracketing your answer
     return (x1 - y1) / (y2 - y1) * (z2 - z1) + z1
 
 # air = isentropic(1.4)
 # air.M(0.2)
-# air.static(1,1,273)
+# air.getStag(1,1,273)
 # print(air.P0,air.T0)
 
 # flow = rayleigh(1.4)
@@ -162,7 +183,7 @@ def linInterp(x1,y1,y2,z1,z2):
 # print("Temperature Ratio",air.Tratio)
 # print()
 
-# air.static(101000,1.4077,250)
+# air.getStag(101000,1.4077,250)
 
 # print("Stagnation Pressure",air.P0/1000,"kPa")
 # print("Stagnation Density",air.rho0,"kg/m^3")
