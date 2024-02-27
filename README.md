@@ -10,3 +10,5 @@ Ansys Mdot read.py is a python program I wrote to read a large amount of ansys r
   -The data gathered by this was used in a CDR for Cal Poly Space Systems
 
 The folder CFD has some screenshots of the CPSS injector that I ran to investigate the mass flow rate between the holes and calculate the plume length.
+
+The folder Aero 355 Midterm has the code I used to answer the questions on a midterm for my space environments class.
