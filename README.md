@@ -2,6 +2,7 @@ These are some projects in python, MATLAB, and C++ that I'm particularly proud o
 
 SurfleetToolbox.py is the python toolbox I wrote for equations I use in Aero 303 Gas Dynamics and Heat Transfer.
   -It can be seen in use in the reposity Gas Dynamics HW3 on my profile
+  ThetaMachBeta is data used by this ToolBox
 
 TheFinal.m is a MATLAB script written to complete the AERO 351 Orbital Mechanics file
   -The associated PDF: TheFinal.pdf shows it's output
