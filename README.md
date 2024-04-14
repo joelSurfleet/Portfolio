@@ -13,3 +13,5 @@ Ansys Mdot read.py is a python program I wrote to read a large amount of ansys r
 The folder CFD has some screenshots of the CPSS injector that I ran to investigate the mass flow rate between the holes and calculate the plume length.
 
 The folder Aero 355 Midterm has the code I used to answer the questions on a midterm for my space environments class.
+
+The folder MGA has a tool to calculate the mass growth allowance of a sattelite based on the design maturity of its subsystems
