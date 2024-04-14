@@ -1,4 +1,4 @@
-These are some projects in python, and MATLAB, that I'm particularly proud of and showcase some of my skills
+These are some projects in python, and MATLAB that showcase my skills
 
 SurfleetToolbox.py is the python toolbox I wrote for equations I use in Aero 303 Gas Dynamics and Heat Transfer.
   -It can be seen in use in the reposity Gas Dynamics HW3 on my profile
