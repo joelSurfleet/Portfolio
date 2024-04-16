@@ -28,7 +28,6 @@ def MGA(sat,states):
 
         for j in range(len(SAWE[0])):
             if SAWE[0][j] == sub:
-                id = j
                 break
 
         if states[sub] == "NTE":
